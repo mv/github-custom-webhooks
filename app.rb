@@ -13,13 +13,6 @@ end
 post '/request' do
   response = <<-HTML
 <html><pre>
-headers
--------
-#{headers.pretty_inspect}
-
-request.params
---------------
-#{params.pretty_inspect}
 
 request.body
 ------------
