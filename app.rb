@@ -2,6 +2,8 @@ require 'sinatra'
 require 'json'
 require 'pp'
 
+require_relative 'lib/asana'
+
 get '/' do
   "Test."
 end
