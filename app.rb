@@ -52,6 +52,11 @@ def verify_signature(payload)
     return
   end
 
+  if not ENV.has_key?('WEBHOOK_SECRET_TOKEN')
+    logger.warn("WEBHOOK_SECRET_TOKEN is not defined. Skipping...")
+    return
+  end
+
   signature = 'sha1=' + OpenSSL::HMAC.hexdigest( OpenSSL::Digest.new('sha1'), ENV['WEBHOOK_SECRET_TOKEN'], payload )
 
   if Rack::Utils.secure_compare(signature, request.env['HTTP_X_HUB_SIGNATURE'])
