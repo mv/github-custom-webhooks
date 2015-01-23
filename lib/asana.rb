@@ -20,9 +20,9 @@ post '/asana/:workspace/:project' do
   logger.info("asana destination: /#{w}/#{p}")
 
   data = %Q{ -d "workspace=#{w}" -d "projects[0]=#{p}" -d "name=#{github['issue']['title']}" -d "notes=#{github['issue']['body']}" }
-
-  cmd = "curl -s -u #{ENV['WEBHOOK_ASANA_KEY']}: #{data} https://app.asana.com/api/1.0/tasks"
+  cmd  = "curl -s -u #{ENV['WEBHOOK_ASANA_KEY']}: #{data} https://app.asana.com/api/1.0/tasks"
   logger.info("asana cmd: #{cmd}")
+
   `#{cmd}`
 
 end
