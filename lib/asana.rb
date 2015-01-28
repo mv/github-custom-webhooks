@@ -19,11 +19,16 @@ post '/asana/:workspace/:project' do
   p = asana_projects[ params[:project] ]
   logger.info("asana destination: /#{w}/#{p}")
 
-  data = %Q{ -d "workspace=#{w}" -d "projects[0]=#{p}" -d "name=#{github['issue']['title']}" -d "notes=#{github['issue']['body']}" }
-  cmd  = "curl -s -u #{ENV['WEBHOOK_ASANA_KEY']}: #{data} https://app.asana.com/api/1.0/tasks"
-  logger.info("asana cmd: #{cmd}")
 
-  `#{cmd}`
+  # Parent task
+  data = %Q{ -d "workspace=#{w}" -d "projects[0]=#{p}" -d "name=#{github['issue']['title']}" -d "notes=#{github['issue']['body']}" }
+  cmd  = "curl -s #{data} #{asana_api}/tasks"
+  logger.info("asana parent cmd: #{cmd}")
+
+  parent_id = JSON.parse(`#{cmd} -u #{ENV['WEBHOOK_ASANA_KEY']}:`)['data']['id']
+  logger.info("asana parent id: #{parent_id}")
+
+
 
 end
 
