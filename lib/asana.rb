@@ -18,6 +18,7 @@ post '/asana/issue/:workspace/:project' do
   # asana stuff
   asana_api = 'https://app.asana.com/api/1.0'
   check_env
+
   w = asana_workspaces[ params[:workspace] ]
   p = asana_projects[   params[:project]   ]
   logger.info("asana [/workspace/project/]: [/#{w}/#{p}/]")
@@ -39,10 +40,10 @@ post '/asana/issue/:workspace/:project' do
   ##
   subtasks = [ '01-Check', '02-Verify', '03-Test', '04-Done' ].reverse
 
-  subtasks.each do |task|
-    data = %Q{-d "name=#{task}" -d "notes=To do..." }
+  subtasks.each do |subtask|
+    data = %Q{-d "name=#{subtask}" -d "notes=To do..." }
     cmd  = "curl -s #{asana_api}/tasks/#{parent_id}/subtasks #{data}"
-    logger.info("asana subtask new [#{task}]: #{cmd}")
+    logger.info("asana subtask new [#{subtask}]: #{cmd}")
 
     subtask_id = JSON.parse(`#{cmd} -u #{ENV['WEBHOOK_ASANA_KEY']}:`)['data']['id']
     logger.info("asana subtask created: [#{subtask_id}]")
