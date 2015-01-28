@@ -25,6 +25,8 @@ post '/asana/issue/:workspace/:project' do
 
   # parent task
   data = %Q{-d "workspace=#{w}" -d "projects[0]=#{p}" -d "name=#{github['issue']['title']}" -d "notes=#{github['issue']['body']}" }
+  ## POST /tasks
+  ##
   cmd  = "curl -s #{asana_api}/tasks #{data}"
   logger.info("asana task cmd: #{cmd}")
 
@@ -33,6 +35,8 @@ post '/asana/issue/:workspace/:project' do
 
 
   # subtasks
+  ## POST /tasks/:parent_id/subtasks
+  ##
   subtasks = [ '01-Check', '02-Verify', '03-Test', '04-Done' ].reverse
 
   subtasks.each do |task|
