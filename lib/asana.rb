@@ -21,7 +21,7 @@ post '/asana/issue/:workspace/:project' do
 
 
   # Parent task
-  data = %Q{ -d "workspace=#{w}" -d "projects[0]=#{p}" -d "name=#{github['issue']['title']}" -d "notes=#{github['issue']['body']}" }
+  data = %Q{-d "workspace=#{w}" -d "projects[0]=#{p}" -d "name=#{github['issue']['title']}" -d "notes=#{github['issue']['body']}" }
   cmd  = "curl -s #{data} #{asana_api}/tasks"
   logger.info("asana parent cmd: #{cmd}")
 
