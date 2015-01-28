@@ -37,9 +37,6 @@ post '/webhook' do
 end
 
 
-###
-### Ref: https://developer.github.com/webhooks/securing/
-###
 def check_request(request)
   request.body.rewind
   payload = request.body.read
@@ -47,6 +44,9 @@ def check_request(request)
   payload
 end
 
+###
+### Ref: https://developer.github.com/webhooks/securing/
+###
 def verify_signature(payload)
 
   if not request.env.has_key?('HTTP_X_HUB_SIGNATURE')
@@ -54,12 +54,12 @@ def verify_signature(payload)
     return
   end
 
-  if not ENV.has_key?('WEBHOOK_SECRET_TOKEN')
-    logger.warn("WEBHOOK_SECRET_TOKEN is not defined. Skipping...")
+  if not ENV.has_key?('WEBHOOK_GITHUB_SECRET_TOKEN')
+    logger.warn("WEBHOOK_GITHUB_SECRET_TOKEN is not defined. Skipping...")
     return
   end
 
-  signature = 'sha1=' + OpenSSL::HMAC.hexdigest( OpenSSL::Digest.new('sha1'), ENV['WEBHOOK_SECRET_TOKEN'], payload )
+  signature = 'sha1=' + OpenSSL::HMAC.hexdigest( OpenSSL::Digest.new('sha1'), ENV['WEBHOOK_GITHUB_SECRET_TOKEN'], payload )
 
   if Rack::Utils.secure_compare(signature, request.env['HTTP_X_HUB_SIGNATURE'])
     logger.info("Signature OK: #{signature}")
@@ -67,5 +67,6 @@ def verify_signature(payload)
     logger.error("Signature error: #{signature}. Expected #{request.env['HTTP_X_HUB_SIGNATURE']}")
     return halt 500, "Signatures didn't match!"
   end
+
 end
 
