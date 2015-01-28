@@ -62,7 +62,7 @@ def asana_workspaces
 
   JSON.parse(res)['data'].each do |d|
     # TODO: lowercase + remove spaces + remove 'acentos'
-    var[ d['name'].downcase ] = d['id']
+    var[ d['name'].downcase.gsub(" ", "-") ] = d['id']
   end
   var
 end
@@ -73,7 +73,7 @@ def asana_projects
   var = {}
 
   JSON.parse(res)['data'].each do |d|
-    var[ d['name'].downcase ] = d['id']
+    var[ d['name'].downcase.gsub(" ", "-") ] = d['id']
   end
   var
 end
