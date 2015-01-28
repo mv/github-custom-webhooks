@@ -50,4 +50,5 @@ tmp/
 log/
 
 # This project
+*.env
 
