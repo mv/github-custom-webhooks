@@ -55,7 +55,8 @@ def check_env
 end
 
 def asana_workspaces
-  res = `curl -s -u #{ENV['WEBHOOK_ASANA_KEY']}: https://app.asana.com/api/1.0/workspaces`
+  asana_api = 'https://app.asana.com/api/1.0'
+  res = `curl -s -u #{ENV['WEBHOOK_ASANA_KEY']}: #{asana_api}/workspaces`
   var = {}
 
   JSON.parse(res)['data'].each do |d|
@@ -66,7 +67,8 @@ def asana_workspaces
 end
 
 def asana_projects
-  res = `curl -s -u #{ENV['WEBHOOK_ASANA_KEY']}: https://app.asana.com/api/1.0/projects`
+  asana_api = 'https://app.asana.com/api/1.0'
+  res = `curl -s -u #{ENV['WEBHOOK_ASANA_KEY']}: #{asana_api}/projects`
   var = {}
 
   JSON.parse(res)['data'].each do |d|
@@ -74,4 +76,5 @@ def asana_projects
   end
   var
 end
+
 
