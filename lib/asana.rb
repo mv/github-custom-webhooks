@@ -6,6 +6,9 @@ get '/asana' do
 end
 
 
+###
+### Github issue -> Asana task+subtasks
+###
 post '/asana/issue/:workspace/:project' do
 
   # github stuff
@@ -66,6 +69,29 @@ def asana_workspaces
   end
   var
 end
+
+## Projects
+## --------
+## From THIS:
+## {
+##     "data" => [
+##         [0] {
+##               "id" => 25021197661019,
+##             "name" => "MvWay"
+##         },
+##         [1] {
+##               "id" => 498346170860,
+##             "name" => "Personal Projects"
+##         }
+##     ]
+## }
+##
+## To THAT:
+##
+## var = {
+##   "mvway" => 25021197661019,
+##   "personal-projects" => 498346170860
+## }
 
 def asana_projects
   asana_api = 'https://app.asana.com/api/1.0'
