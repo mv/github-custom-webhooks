@@ -8,7 +8,7 @@ get '/asana' do
 end
 
 
-post '/asana/:workspace/:project' do
+post '/asana/issue/:workspace/:project' do
 
   # github stuff
   github = JSON.parse( check_request(request) )
