@@ -29,6 +29,17 @@ post '/asana/:workspace/:project' do
   logger.info("asana parent id: #{parent_id}")
 
 
+  # sub-tasks
+  subtasks = [ '01-Check', '02-Verify', '03-Test', '04-Done' ].reverse
+
+  subtasks.each do |task|
+    data = %Q{ -d "name=#{task}" -d "notes=To do..." }
+    cmd  = "curl -s #{data} #{asana_api}/tasks/#{parent_id}/subtasks"
+    logger.info("asana sub-task: [#{task}] #{cmd}")
+
+    subtask_id = JSON.parse(`#{cmd} -u #{ENV['WEBHOOK_ASANA_KEY']}:`)['data']['id']
+    logger.info("asana subtask id: #{subtask_id}")
+  end
 
 end
 
