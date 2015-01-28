@@ -20,28 +20,28 @@ post '/asana/issue/:workspace/:project' do
   check_env
   w = asana_workspaces[ params[:workspace] ]
   p = asana_projects[   params[:project]   ]
-  logger.info("asana destination: /#{w}/#{p}")
+  logger.info("asana [/workspace/project/]: [/#{w}/#{p}/]")
 
 
-  # Parent task
+  # parent task
   data = %Q{-d "workspace=#{w}" -d "projects[0]=#{p}" -d "name=#{github['issue']['title']}" -d "notes=#{github['issue']['body']}" }
-  cmd  = "curl -s #{data} #{asana_api}/tasks"
-  logger.info("asana parent cmd: #{cmd}")
+  cmd  = "curl -s #{asana_api}/tasks #{data}"
+  logger.info("asana task cmd: #{cmd}")
 
   parent_id = JSON.parse(`#{cmd} -u #{ENV['WEBHOOK_ASANA_KEY']}:`)['data']['id']
-  logger.info("asana parent id: #{parent_id}")
+  logger.info("asana task id: [#{parent_id}]")
 
 
-  # sub-tasks
+  # subtasks
   subtasks = [ '01-Check', '02-Verify', '03-Test', '04-Done' ].reverse
 
   subtasks.each do |task|
-    data = %Q{ -d "name=#{task}" -d "notes=To do..." }
-    cmd  = "curl -s #{data} #{asana_api}/tasks/#{parent_id}/subtasks"
-    logger.info("asana sub-task: [#{task}] #{cmd}")
+    data = %Q{-d "name=#{task}" -d "notes=To do..." }
+    cmd  = "curl -s #{asana_api}/tasks/#{parent_id}/subtasks #{data}"
+    logger.info("asana subtask new [#{task}]: #{cmd}")
 
     subtask_id = JSON.parse(`#{cmd} -u #{ENV['WEBHOOK_ASANA_KEY']}:`)['data']['id']
-    logger.info("asana subtask id: #{subtask_id}")
+    logger.info("asana subtask created: [#{subtask_id}]")
   end
 
 end
