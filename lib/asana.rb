@@ -1,8 +1,6 @@
 require 'sinatra'
 require 'json'
 
-asana_api  = 'https://app.asana.com/api/1.0'
-
 get '/asana' do
   "This is Asana"
 end
@@ -13,10 +11,12 @@ post '/asana/issue/:workspace/:project' do
   # github stuff
   github = JSON.parse( check_request(request) )
 
+
   # asana stuff
+  asana_api = 'https://app.asana.com/api/1.0'
   check_env
   w = asana_workspaces[ params[:workspace] ]
-  p = asana_projects[ params[:project] ]
+  p = asana_projects[   params[:project]   ]
   logger.info("asana destination: /#{w}/#{p}")
 
 
@@ -50,6 +50,7 @@ def check_env
      return halt 500, "Undefined WEBHOOK_ASANA_KEY"
      false
    else
+     logger.info('Found: WEBHOOK_ASANA_KEY')
      true
    end
 end
