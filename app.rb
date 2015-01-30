@@ -45,13 +45,6 @@ post '/asana/issue/:workspace/:project' do
   # Polite result
   "New task: #{parent_id}"
 
-# error do
-#   if asana_task.check_key
-#     'Asana: Sorry there was a nasty error - ' + env['sinatra.error'].name
-#   else
-#     'Asana UNAUTHORIZED: API Key is not defined.'
-#   end
-# end # error
 end
 
 post '/asana/issue/:workspace/:project/delete/:task_id' do
