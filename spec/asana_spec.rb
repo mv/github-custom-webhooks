@@ -71,14 +71,14 @@ end
 
 describe "Webhooks - /asana" do
 
+  it "should define WEBHOOK_ASANA_KEY environment variable" do
+    expect(ENV.has_key?('WEBHOOK_ASANA_KEY')).to be true
+  end
+
   it "should GET '/asana'" do
     get '/asana'
     expect(last_response).to be_ok
     expect(last_response.body).to eq('This is Asana.')
-  end
-
-  it "should define WEBHOOK_ASANA_KEY environment variable" do
-    expect(ENV.has_key?('WEBHOOK_ASANA_KEY')).to be true
   end
 
   if ENV.has_key?('WEBHOOK_ASANA_KEY')
