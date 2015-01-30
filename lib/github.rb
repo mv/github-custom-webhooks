@@ -22,7 +22,6 @@ module GitHub
     end
 
     def payload
-
       if is_not_signed?
         'Payload-is-not-signed'
       elsif valid?
@@ -30,8 +29,6 @@ module GitHub
       else
         'Payload-is-not-valid.'
       end
-
-
     end
 
     ###
@@ -46,10 +43,8 @@ module GitHub
 #     puts "my_signature: #{@my_signature}"
 
       if Rack::Utils.secure_compare(@my_signature, @signature)
-#       logger.info("Signature OK: #{signature}")
         true
       else
-#       logger.warn("Signature error: #{signature}. Expected #{request.env['HTTP_X_HUB_SIGNATURE']}")
         false
       end
     end

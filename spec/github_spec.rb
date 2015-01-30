@@ -2,7 +2,11 @@
 
 require File.expand_path '../spec_helper.rb', __FILE__
 
-describe "Sinatra: Webhooks - /github/check" do
+describe "Webhooks - /github/check" do
+
+  it "should define WEBHOOK_GITHUB_SECRET_TOKEN environment variable" do
+    expect(ENV.has_key?('WEBHOOK_GITHUB_SECRET_TOKEN')).to be true
+  end
 
   it "should POST to /github/check " do
     params = {:type => "issue"}.to_json
@@ -31,12 +35,12 @@ describe "Sinatra: Webhooks - /github/check" do
 
   it "should POST to /github/check with a valid signature" do
     ENV['WEBHOOK_GITHUB_SECRET_TOKEN'] = 'one-secret-token'
-    params = {:type => "issue"}.to_json
-    env    = {"CONTENT_TYPE" => "application/json" , "HTTP_X_HUB_SIGNATURE" => "sha1=5a8ea7c7959974a8f7184abd1d58c29973d815be"}
+    params = {'issue' => {"title" => "POST test", "number" => "98"}}.to_json
+    env    = {"CONTENT_TYPE" => "application/json" , "HTTP_X_HUB_SIGNATURE" => "sha1=2b6f0ef19ae7440c3ffa0404b8113ae97807fa90"}
 
     post '/github/check', params, env
     expect(last_response).to be_ok
-    expect(last_response.body).to eq('["type", "issue"]')
+    expect(last_response.body).to eq('["issue", {"title"=>"POST test", "number"=>"98"}]')
   end
 
 end
