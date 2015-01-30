@@ -1,7 +1,9 @@
 Github [Custom] Webhooks
 ------------------------
 
-TODO.
+[![Build Status](https://travis-ci.org/mv/github-custom-webhooks.svg)](https://travis-ci.org/mv/github-custom-webhooks)
+
+Simple Sinatra API to be used by Github Webhooks.
 
 
 ## References
