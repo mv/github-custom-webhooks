@@ -52,6 +52,13 @@ post '/asana/issue/:workspace/:project' do
 #     'Asana UNAUTHORIZED: API Key is not defined.'
 #   end
 # end # error
+end
+
+post '/asana/issue/:workspace/:project/delete/:task_id' do
+
+  asana_task = Asana::Task.new(params[:workspace], params[:project])
+
+  asana_task.delete_task(params[:task_id])
 
 end
 

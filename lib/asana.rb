@@ -52,6 +52,14 @@ module Asana
       result.to_json
     end
 
+    def delete_task(id)
+      # task
+      ## DELETE /tasks/:id
+      ##
+      cmd = "curl -X DELETE -s #{ASANA_API}/tasks/#{id}"
+      res = `#{cmd} -u #{ENV['WEBHOOK_ASANA_KEY']}:`
+    end
+
 
     def check_key
       if ENV.has_key?('WEBHOOK_ASANA_KEY')
