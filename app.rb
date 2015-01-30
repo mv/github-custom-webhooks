@@ -3,70 +3,56 @@ require 'json'
 require 'pp'
 
 require_relative 'lib/asana'
+require_relative 'lib/github'
+
+set :logging, true
 
 get '/' do
   "Test."
 end
 
 get '/webhook' do
-  "Hello Webhook"
+  "Hello Webhook."
 end
 
-post '/request' do
-  response = <<-HTML
-<html><pre>
-
-request.body
-------------
-#{JSON.parse(request.body.read).pretty_inspect}
-</pre></html>
-
-request.env
------------
-#{request.env.pretty_inspect}
-
-  HTML
+post '/github/check' do
+  github = GitHub::Check.new(request)
+  github.payload
 end
 
-post '/check' do
-  check_request(request)
+get '/asana' do
+  "This is Asana."
 end
 
-post '/webhook' do
-  pp "Receiving Webhook #{params[:webhookId]}"
-end
+post '/asana/issue/:workspace/:project' do
 
+  # github: check current 'request' that was triggered by Github project
+  github = GitHub::Check.new(request).payload
 
-def check_request(request)
-  request.body.rewind
-  payload = request.body.read
-  verify_signature(payload)
-  payload
-end
+  # asana: if payload is a 'issue', create task/subtasks
+  asana_task = Asana::Task.new(params[:workspace], params[:project])
 
-###
-### Ref: https://developer.github.com/webhooks/securing/
-###
-def verify_signature(payload)
+  new_issue = {
+    'name'   => github['issue']['title'],
+    'number' => github['issue']['number']
+  }
 
-  if not request.env.has_key?('HTTP_X_HUB_SIGNATURE')
-    logger.warn("X_HUB_SIGNATURE is not defined. Skipping...")
-    return
-  end
+  parent_id  = asana_task.create(new_issue)
 
-  if not ENV.has_key?('WEBHOOK_GITHUB_SECRET_TOKEN')
-    logger.warn("WEBHOOK_GITHUB_SECRET_TOKEN is not defined. Skipping...")
-    return
-  end
+  # optional(?)
+  asana_task.create_subtasks(parent_id)
 
-  signature = 'sha1=' + OpenSSL::HMAC.hexdigest( OpenSSL::Digest.new('sha1'), ENV['WEBHOOK_GITHUB_SECRET_TOKEN'], payload )
-
-  if Rack::Utils.secure_compare(signature, request.env['HTTP_X_HUB_SIGNATURE'])
-    logger.info("Signature OK: #{signature}")
-  else
-    logger.error("Signature error: #{signature}. Expected #{request.env['HTTP_X_HUB_SIGNATURE']}")
-    return halt 500, "Signatures didn't match!"
-  end
+  # Polite result
+  "New task: #{parent_id}"
 
 end
+
+post '/asana/issue/:workspace/:project/delete/:task_id' do
+
+  asana_task = Asana::Task.new(params[:workspace], params[:project])
+
+  asana_task.delete_task(params[:task_id])
+
+end
+
 
