@@ -3,9 +3,9 @@ rvm:
   - "2.1.2"
 
 cache: bundler
-#bundler_args: --without development --deployment --jobs=3 --retry=3
 
-install: curl
+# bundler_args: --without development --deployment --jobs=3 --retry=3
+# install: apt-get install curl
 
 script: rake test
 #cript: bundle exec rspec spec --color --format doc
