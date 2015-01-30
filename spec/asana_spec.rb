@@ -41,19 +41,28 @@ describe "Asana API" do
       expect(res.keys.count).to be > 0
     end
 
-    it "should create new task for key ...#{key[-4..-1]}" do
-      ENV['WEBHOOK_ASANA_KEY'] = key
-      asana_task = Asana::Task.new(w,p)
-      res = asana_task.create( {'name' => 'rspec', 'number' => '-99'} )
-      expect(res).not_to be nil
-    end
+    describe "Asana API: Tasks" do
 
-    it "should create subtasks for key ...#{key[-4..-1]}" do
-      ENV['WEBHOOK_ASANA_KEY'] = key
-      asana_task = Asana::Task.new(w,p)
-      parent_id = asana_task.create( {'name' => 'rspec', 'number' => '-99'} )
-      res = asana_task.create_subtasks( parent_id )
-      expect(res).not_to be nil
+      asana_task = ''
+      task_id    = ''
+
+      it "should create new task for key ...#{key[-4..-1]}" do
+        ENV['WEBHOOK_ASANA_KEY'] = key
+        asana_task = Asana::Task.new(w,p)
+        task_id    = asana_task.create( {'name' => 'rspec', 'number' => '-99'} )
+
+        expect(task_id).not_to be nil
+      end
+
+      it "should create subtasks for key ...#{key[-4..-1]}" do
+        res = asana_task.create_subtasks( task_id )
+        expect(res).not_to be nil
+      end
+
+      it "should delete task and subtasks" do
+        true
+      end
+
     end
 
   end # if
